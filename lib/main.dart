@@ -91,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     list.sort((spe1, spe2){
-      return spe2.name.compareTo(spe1.name);
+      return spe1.name.compareTo(spe2.name);
     });
 
     setState(() {
@@ -175,7 +175,6 @@ class _MyHomePageState extends State<MyHomePage> {
               _speaker[inx].name,
               style: Theme.of(context).textTheme.headline6,
             ),
-            // leading: _buildAvatar(),
             trailing: Icon(Icons.keyboard_arrow_right),
             subtitle: Text("${_speaker[inx].id}"),
             onTap: () => _openRecorder(_speaker[inx]),
