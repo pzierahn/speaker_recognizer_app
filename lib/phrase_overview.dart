@@ -89,14 +89,14 @@ class PhraseSet {
   String toJson() => json.encode(toMap());
 
   factory PhraseSet.fromMap(Map<String, dynamic> json) => PhraseSet(
-        id: json["ID"],
+        id: json["Id"],
         title: json["Title"],
         language: json["Language"],
         phrases: List<String>.from(json["Phrases"].map((x) => x)),
       );
 
   Map<String, dynamic> toMap() => {
-        "ID": id,
+        "Id": id,
         "Title": title,
         "Language": language,
         "Phrases": List<dynamic>.from(phrases.map((x) => x)),

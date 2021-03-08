@@ -26,7 +26,7 @@ class Recording {
 
   factory Recording.fromMap(Map<String, dynamic> json) => Recording(
         date: json["Date"] == null ? null : json["Date"],
-        id: json["ID"] == null ? null : json["ID"],
+        id: json["Id"] == null ? null : json["Id"],
         speakerId: json["SpeakerId"] == null ? null : json["SpeakerId"],
         audio: json["Audio"] == null ? null : json["Audio"],
         language: json["Language"] == null ? null : json["Language"],
@@ -35,7 +35,7 @@ class Recording {
 
   Map<String, dynamic> toMap() => {
         "Date": date,
-        "ID": id,
+        "Id": id,
         "SpeakerId": speakerId,
         "Audio": audio,
         "Language": language,

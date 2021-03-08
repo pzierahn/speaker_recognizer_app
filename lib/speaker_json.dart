@@ -41,14 +41,14 @@ class Speaker {
   String toJson() => json.encode(toMap());
 
   factory Speaker.fromMap(Map<String, dynamic> json) => Speaker(
-        id: json["ID"] == null ? null : json["ID"],
+        id: json["Id"] == null ? null : json["Id"],
         age: json["Age"] == null ? null : json["Age"],
         name: json["Name"] == null ? null : json["Name"],
         sex: json["Sex"] == null ? null : json["Sex"],
       );
 
   Map<String, dynamic> toMap() => {
-        "ID": id,
+        "Id": id,
         "Age": age,
         "Name": name,
         "Sex": sex,
