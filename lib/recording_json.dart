@@ -6,39 +6,38 @@ class Recording {
   Recording({
     required this.id,
     required this.speakerId,
-    required this.audio,
-    required this.language,
-    required this.text,
-    Timestamp? date,
-  }) : date = date ?? Timestamp.now();
-
-  final Timestamp date;
+    required this.setId,
+    required this.phrase,
+    required this.audioPath,
+    Timestamp? created,
+  }) : created = created ?? Timestamp.now();
 
   final String id;
+  final Timestamp created;
   final String speakerId;
-  final String audio;
-  final String language;
-  final String text;
+  final String setId;
+  final String phrase;
+  final String audioPath;
 
   factory Recording.fromJson(String str) => Recording.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
   factory Recording.fromMap(Map<String, dynamic> json) => Recording(
-        date: json["Date"] == null ? null : json["Date"],
-        id: json["Id"] == null ? null : json["Id"],
-        speakerId: json["SpeakerId"] == null ? null : json["SpeakerId"],
-        audio: json["Audio"] == null ? null : json["Audio"],
-        language: json["Language"] == null ? null : json["Language"],
-        text: json["Text"] == null ? null : json["Text"],
+        id: json["Id"],
+        speakerId: json["SpeakerId"],
+        setId: json["SetId"],
+        phrase: json["Phrase"],
+        created: json["Created"] == null ? null : json["Created"],
+        audioPath: json["AudioPath"],
       );
 
   Map<String, dynamic> toMap() => {
-        "Date": date,
         "Id": id,
+        "Created": created,
         "SpeakerId": speakerId,
-        "Audio": audio,
-        "Language": language,
-        "Text": text,
+        "SetId": setId,
+        "Phrase": phrase,
+        "AudioPath": audioPath,
       };
 }

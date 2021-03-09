@@ -4,24 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:record/record.dart';
-import 'package:speaker_recognizer/file_uploader.dart';
 import 'package:speaker_recognizer/audio_player.dart';
 import 'package:speaker_recognizer/recording_json.dart';
-import 'package:speaker_recognizer/simple.dart';
-import 'package:speaker_recognizer/speaker_json.dart';
 
 import 'dart:io' as io;
 
 class RecorderPage extends StatefulWidget {
-  final Speaker speaker;
   final String phrase;
   final String audioPath;
+  final ValueChanged<bool> onUpload;
 
   const RecorderPage({
     Key? key,
-    required this.speaker,
     required this.phrase,
     required this.audioPath,
+    required this.onUpload,
   }) : super(key: key);
 
   @override
@@ -33,39 +30,21 @@ class _RecorderPageState extends State<RecorderPage> {
 
   bool _isRecording = false;
 
-  String? _audioId;
-  String? _audioName;
-  String? _path;
 
   Recording? _recording;
 
   @override
   void initState() {
     super.initState();
-
-    _audioId = Simple.id(12);
-    _audioName = "${widget.speaker.id}.$_audioId.m4a";
-    _path = "${widget.audioPath}/$_audioName";
-
-    _recording = Recording(
-      id: _audioId!,
-      speakerId: widget.speaker.id,
-      audio: _audioName!,
-      language: "de",
-      text: widget.phrase,
-    );
-
-    log("initState: _audioId=$_audioId", name: _logTag);
-    log("initState: _audioName=$_audioName", name: _logTag);
   }
 
   Future<void> _start() async {
-    log("_start: _path=${_path!}", name: _logTag);
+    log("_start: audioPath=${widget.audioPath}", name: _logTag);
 
     try {
       if (await Record.hasPermission()) {
         await Record.start(
-          path: _path!,
+          path: widget.audioPath,
           samplingRate: 48000,
         );
 
@@ -100,7 +79,7 @@ class _RecorderPageState extends State<RecorderPage> {
           title: Text("Upload sample"),
           content: SingleChildScrollView(
             child: AudioPlayer(
-              path: _path!,
+              path: widget.audioPath,
             ),
           ),
           actions: <Widget>[
@@ -123,15 +102,11 @@ class _RecorderPageState extends State<RecorderPage> {
 
     log("_showMyDialog: upload=$upload", name: _logTag);
 
-    if (upload ?? false) {
-      FileUploader.upload(_recording!, _path!);
-    } else {
-      _deleteFile();
-    }
+    widget.onUpload(upload ?? false);
   }
 
   Future<void> _deleteFile() async {
-    await io.File(_path!).delete();
+    await io.File(widget.audioPath).delete();
   }
 
   Future<void> _cancel() async {

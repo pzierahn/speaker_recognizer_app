@@ -17,7 +17,7 @@ class _RecordingListenerState extends State<RecordingListener> {
   static final _logTag = "$RecordingListener";
 
   final _player = ap.AudioPlayer();
-  final _recordingsRef = FirebaseStorage.instance.ref().child("recordings");
+  final _recordingsRef = FirebaseStorage.instance.ref();
 
   List<Recording> _recordings = [];
 
@@ -51,10 +51,16 @@ class _RecordingListenerState extends State<RecordingListener> {
     log("initState:", name: _logTag);
 
     Query query = FirebaseFirestore.instance.collection("recordings");
-    query = query.orderBy("Date", descending: true);
+    query = query.orderBy("Created", descending: true);
 
     final snap = query.snapshots();
     snap.listen((event) => _parseList(event.docs));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _player.dispose();
   }
 
   @override
@@ -66,25 +72,37 @@ class _RecordingListenerState extends State<RecordingListener> {
       body: ListView.builder(
         itemCount: _recordings.length,
         itemBuilder: (ctx, inx) {
-          final ref = _recordingsRef.child("/${_recordings[inx].audio}");
+          final recording = _recordings[inx];
+
+          final ref = _recordingsRef.child("${recording.audioPath}");
 
           final title = ListTile(
             title: Text(
-              _recordings[inx].audio,
-              style: Theme.of(context).textTheme.headline6,
+              recording.phrase,
+              // style: Theme.of(context).textTheme.headline6,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            leading: Icon(Icons.play_arrow),
-            subtitle: Text("${_recordings[inx].date.toDate()}"),
+            // leading: Icon(Icons.play_arrow),
+            // leading: Text(recording.speakerId),
+            subtitle: Wrap(
+              spacing: 20,
+              children: [
+                Text(recording.id),
+                Text(recording.speakerId),
+                Text(recording.setId),
+              ],
+            ),
             onTap: () async {
               final url = await ref.getDownloadURL();
-
               _player.setUrl(url);
               _player.play();
             },
             onLongPress: () {
               ref.delete();
               final doc = FirebaseFirestore.instance
-                  .collection("recordings").doc(_recordings[inx].id);
+                  .collection("recordings")
+                  .doc(recording.id);
 
               doc.delete();
             },

@@ -1,18 +1,24 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:speaker_recognizer/file_uploader.dart';
+import 'package:speaker_recognizer/phrase_overview.dart';
 import 'package:speaker_recognizer/recorder_page.dart';
+import 'package:speaker_recognizer/recording_json.dart';
+import 'package:speaker_recognizer/simple.dart';
 import 'package:speaker_recognizer/speaker_json.dart';
 
 class RecordStream extends StatefulWidget {
   final Speaker speaker;
-  final List<String> phrases;
+  final PhraseSet phrasesSet;
 
   const RecordStream({
     Key? key,
     required this.speaker,
-    required this.phrases,
+    required this.phrasesSet,
   }) : super(key: key);
 
   @override
@@ -35,6 +41,39 @@ class _RecordStreamState extends State<RecordStream> {
     });
   }
 
+  Widget _buildElem(BuildContext ctx, int inx) {
+    String speakerId = widget.speaker.id;
+
+    String phraseSetId = widget.phrasesSet.id;
+
+    String audioId = Simple.id(12);
+    String audioName = "$speakerId.$audioId.m4a";
+
+    String localPath = "$_path/$audioName";
+
+    String phrase = widget.phrasesSet.phrases[inx];
+
+    final recording = Recording(
+      id: audioId,
+      speakerId: speakerId,
+      setId: phraseSetId,
+      phrase: phrase,
+      audioPath: "recordings/$audioName"
+    );
+
+    return RecorderPage(
+      phrase: phrase,
+      audioPath: localPath,
+      onUpload: (upload) {
+        if (upload) {
+          RecordingUploader.post(localPath, recording);
+        } else {
+          File(localPath).delete();
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,15 +83,9 @@ class _RecordStreamState extends State<RecordStream> {
       body: (_path == null)
           ? Center(child: CircularProgressIndicator())
           : PageView.builder(
-              itemCount: widget.phrases.length,
+              itemCount: widget.phrasesSet.phrases.length,
               scrollDirection: Axis.vertical,
-              itemBuilder: (ctx, inx) {
-                return RecorderPage(
-                  speaker: widget.speaker,
-                  phrase: widget.phrases[inx],
-                  audioPath: _path!,
-                );
-              },
+              itemBuilder: _buildElem,
             ),
     );
   }

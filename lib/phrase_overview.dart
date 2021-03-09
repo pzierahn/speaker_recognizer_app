@@ -37,7 +37,7 @@ class _PhraseOverviewState extends State<PhraseOverview> {
       MaterialPageRoute(
         builder: (context) => RecordStream(
           speaker: widget.speaker,
-          phrases: set.phrases,
+          phrasesSet: set,
         ),
       ),
     );
@@ -53,6 +53,7 @@ class _PhraseOverviewState extends State<PhraseOverview> {
       itemBuilder: (ctx, inx) {
         return ListTile(
           title: Text(_sets![inx].title),
+          subtitle: Text(_sets![inx].id),
           trailing: Icon(Icons.keyboard_arrow_right),
           onTap: () => _openRecorder(_sets![inx]),
         );
@@ -75,13 +76,11 @@ class PhraseSet {
   PhraseSet({
     required this.id,
     required this.title,
-    required this.language,
     required this.phrases,
   });
 
   final String id;
   final String title;
-  final String language;
   final List<String> phrases;
 
   factory PhraseSet.fromJson(String str) => PhraseSet.fromMap(json.decode(str));
@@ -89,16 +88,14 @@ class PhraseSet {
   String toJson() => json.encode(toMap());
 
   factory PhraseSet.fromMap(Map<String, dynamic> json) => PhraseSet(
-        id: json["Id"],
+        id: json["Id"] ?? json["ID"],
         title: json["Title"],
-        language: json["Language"],
         phrases: List<String>.from(json["Phrases"].map((x) => x)),
       );
 
   Map<String, dynamic> toMap() => {
         "Id": id,
         "Title": title,
-        "Language": language,
         "Phrases": List<dynamic>.from(phrases.map((x) => x)),
       };
 }

@@ -5,19 +5,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:speaker_recognizer/recording_json.dart';
 
-class FileUploader {
-  static final _logTag = "$FileUploader";
+class RecordingUploader {
+  static final _logTag = "$RecordingUploader";
 
-  static Future<UploadTask?> _uploadAudio(String path, String filename) async {
-    log("_uploadFile: path=$path", name: _logTag);
+  static Future<UploadTask?> _uploadAudio(String src, String filename) async {
+    log("_uploadFile: path=$src", name: _logTag);
 
     final ref =
-        FirebaseStorage.instance.ref().child("recordings").child("/$filename");
+        FirebaseStorage.instance.ref().child("$filename");
     final metadata = SettableMetadata(
       contentType: "audio/aac",
     );
 
-    final file = File(path);
+    final file = File(src);
     final len = await file.length();
 
     if (len <= 0) {
@@ -30,8 +30,8 @@ class FileUploader {
     return Future.value(task);
   }
 
-  static void upload(Recording recording, String path) async {
-    final task = await _uploadAudio(path, recording.audio);
+  static void post(String path, Recording recording) async {
+    final task = await _uploadAudio(path, recording.audioPath);
 
     task?.then((event) {
       final state = event.state;
