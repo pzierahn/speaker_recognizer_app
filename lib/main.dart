@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     log("initState:", name: _logTag);
 
-    Query query = FirebaseFirestore.instance.collection("speaker");
+    Query query = FirebaseFirestore.instance.collection("speakers");
     final snap = query.snapshots();
     snap.listen((event) => _parseSpeaker(event.docs));
   }
