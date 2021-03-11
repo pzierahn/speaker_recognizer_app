@@ -58,7 +58,7 @@ class _RecordStreamState extends State<RecordStream> {
       speakerId: speakerId,
       setId: phraseSetId,
       phrase: phrase,
-      audioPath: "recordings/$audioName"
+      storagePath: "recordings/$audioName"
     );
 
     return RecorderPage(

@@ -74,7 +74,7 @@ class _RecordingListenerState extends State<RecordingListener> {
         itemBuilder: (ctx, inx) {
           final recording = _recordings[inx];
 
-          final ref = _recordingsRef.child("${recording.audioPath}");
+          final ref = _recordingsRef.child("${recording.storagePath}");
 
           final title = ListTile(
             title: Text(

@@ -31,7 +31,7 @@ class RecordingUploader {
   }
 
   static void post(String path, Recording recording) async {
-    final task = await _uploadAudio(path, recording.audioPath);
+    final task = await _uploadAudio(path, recording.storagePath);
 
     task?.then((event) {
       final state = event.state;

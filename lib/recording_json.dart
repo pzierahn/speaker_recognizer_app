@@ -8,7 +8,7 @@ class Recording {
     required this.speakerId,
     required this.setId,
     required this.phrase,
-    required this.audioPath,
+    required this.storagePath,
     Timestamp? created,
   }) : created = created ?? Timestamp.now();
 
@@ -17,7 +17,7 @@ class Recording {
   final String speakerId;
   final String setId;
   final String phrase;
-  final String audioPath;
+  final String storagePath;
 
   factory Recording.fromJson(String str) => Recording.fromMap(json.decode(str));
 
@@ -29,7 +29,7 @@ class Recording {
         setId: json["SetId"],
         phrase: json["Phrase"],
         created: json["Created"] == null ? null : json["Created"],
-        audioPath: json["AudioPath"],
+        storagePath: json["StoragePath"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -38,6 +38,6 @@ class Recording {
         "SpeakerId": speakerId,
         "SetId": setId,
         "Phrase": phrase,
-        "AudioPath": audioPath,
+        "StoragePath": storagePath,
       };
 }
