@@ -126,7 +126,7 @@ class _SpeakerEditorState extends State<SpeakerEditor> {
     );
 
     final query = FirebaseFirestore.instance
-        .collection("speaker").doc(speaker.id);
+        .collection("speakers").doc(speaker.id);
 
     await query.set(speaker.toMap());
 
